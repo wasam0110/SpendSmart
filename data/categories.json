@@ -1,0 +1,130 @@
+[
+    {
+        "id": "cat_001",
+        "name": "Food",
+        "icon": "utensils",
+        "color": "#FF6384",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_004",
+        "name": "Entertainment",
+        "icon": "film",
+        "color": "#4BC0C0",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_005",
+        "name": "Shopping",
+        "icon": "bag-shopping",
+        "color": "#9966FF",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_007",
+        "name": "Education",
+        "icon": "graduation-cap",
+        "color": "#C9CBCF",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_008",
+        "name": "Income",
+        "icon": "wallet",
+        "color": "#4CAF50",
+        "type": "income",
+        "isDefault": true
+    },
+    {
+        "id": "cat_009",
+        "name": "Salary",
+        "icon": "money-bill",
+        "color": "#2196F3",
+        "type": "income",
+        "isDefault": true
+    },
+    {
+        "id": "cat_010",
+        "name": "Transport",
+        "icon": "car",
+        "color": "#4BC0C0",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_011",
+        "name": "Utilities",
+        "icon": "bolt",
+        "color": "#C9CBCF",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_012",
+        "name": "Healthcare",
+        "icon": "heart-pulse",
+        "color": "#FF6384",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_013",
+        "name": "Home",
+        "icon": "house",
+        "color": "#9966FF",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_014",
+        "name": "Travel",
+        "icon": "plane",
+        "color": "#4BC0C0",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_015",
+        "name": "Gifts",
+        "icon": "gift",
+        "color": "#FF6384",
+        "type": "expense",
+        "isDefault": true
+    },
+    {
+        "id": "cat_016",
+        "name": "Freelance",
+        "icon": "wallet",
+        "color": "#4CAF50",
+        "type": "income",
+        "isDefault": true
+    },
+    {
+        "id": "cat_017",
+        "name": "Bonus",
+        "icon": "money-bill",
+        "color": "#4CAF50",
+        "type": "income",
+        "isDefault": true
+    },
+    {
+        "id": "cat_018",
+        "name": "Refund",
+        "icon": "wallet",
+        "color": "#2196F3",
+        "type": "income",
+        "isDefault": true
+    },
+    {
+        "id": "cat_019",
+        "name": "Other",
+        "icon": "tag",
+        "color": "#C9CBCF",
+        "type": "expense",
+        "isDefault": true
+    }
+]

@@ -1,0 +1,17 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Local web server / cache
+*.log
+
+# Runtime-generated app data (DO NOT COMMIT)
+/data/users.json
+/data/transactions.json
+/data/exchange_rates_cache.json
+/data/categories_*.json
+
+# Optional: keep these committed
+!/data/categories.json
+!/data/currencies.json
