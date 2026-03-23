@@ -116,7 +116,7 @@ function handleAddTransaction() {
     }
 
     // Validate required fields
-    $required = ['date', 'name', 'category', 'amount', 'currency', 'type'];
+    $required = ['date', 'name', 'category', 'amount', 'type'];
     foreach ($required as $field) {
         if (!isset($input[$field]) || empty(trim($input[$field]))) {
             jsonResponse(['success' => false, 'message' => ucfirst($field) . ' is required'], 400);
@@ -127,11 +127,23 @@ function handleAddTransaction() {
     $date = sanitize($input['date']);
     $category = sanitize($input['category']);
     $amount = floatval($input['amount']);
-    $currency = sanitize($input['currency']);
     $type = sanitize($input['type']);
 
+    // Currency is enforced as the user's default currency.
+    $currency = 'EUR';
+    if (isGuestMode()) {
+        if (isset($_SESSION['guest_default_currency']) && !empty($_SESSION['guest_default_currency'])) {
+            $currency = strtoupper((string)$_SESSION['guest_default_currency']);
+        }
+    } else {
+        $user = getCurrentUser();
+        if ($user && !empty($user['defaultCurrency'])) {
+            $currency = strtoupper((string)$user['defaultCurrency']);
+        }
+    }
+
     if (!currencyCodeExists($currency)) {
-        jsonResponse(['success' => false, 'message' => 'Invalid currency'], 400);
+        $currency = 'EUR';
     }
 
     // Validate amount
@@ -218,13 +230,6 @@ function handleEditTransaction() {
                 if (isset($input['name'])) $txn['name'] = sanitize($input['name']);
                 if (isset($input['category'])) $txn['category'] = $updatedCategory;
                 if (isset($input['amount'])) $txn['amount'] = floatval($input['amount']);
-                if (isset($input['currency'])) {
-                    $newCur = sanitize($input['currency']);
-                    if (!currencyCodeExists($newCur)) {
-                        jsonResponse(['success' => false, 'message' => 'Invalid currency'], 400);
-                    }
-                    $txn['currency'] = $newCur;
-                }
                 if (isset($input['type'])) $txn['type'] = $updatedType;
                 $txn['updatedAt'] = date('c');
                 $found = true;
@@ -264,13 +269,6 @@ function handleEditTransaction() {
                     jsonResponse(['success' => false, 'message' => 'Amount must be greater than zero'], 400);
                 }
                 $transaction['amount'] = $amount;
-            }
-            if (isset($input['currency'])) {
-                $newCur = sanitize($input['currency']);
-                if (!currencyCodeExists($newCur)) {
-                    jsonResponse(['success' => false, 'message' => 'Invalid currency'], 400);
-                }
-                $transaction['currency'] = $newCur;
             }
             if (isset($input['type'])) {
                 $transaction['type'] = $updatedType;

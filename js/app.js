@@ -479,23 +479,40 @@
     }
 
     function populateCurrencySelects() {
-        var selects = ['txnCurrency', 'editTxnCurrency', 'accCurrency'];
-        selects.forEach(function (id) {
-            var select = document.getElementById(id);
-            if (!select) return;
-            select.innerHTML = '';
+        var defaultCode = (state.user && state.user.defaultCurrency) ? String(state.user.defaultCurrency) : '';
+        var defaultCur = state.currencies.find(function (c) { return c && c.code === defaultCode; }) || null;
+        var defaultSymbol = defaultCur && defaultCur.symbol ? defaultCur.symbol : defaultCode;
+        var defaultName = defaultCur && defaultCur.name ? defaultCur.name : defaultCode;
+
+        // Account default currency: full list
+        var accSelect = document.getElementById('accCurrency');
+        if (accSelect) {
+            accSelect.disabled = false;
+            accSelect.innerHTML = '';
             state.currencies.forEach(function (cur) {
                 var option = document.createElement('option');
                 option.value = cur.code;
                 var symbol = (cur && cur.symbol) ? cur.symbol : cur.code;
                 var name = (cur && cur.name) ? cur.name : cur.code;
                 option.textContent = cur.code + ' (' + symbol + ') - ' + name;
-                select.appendChild(option);
+                accSelect.appendChild(option);
             });
-            // Set default currency
-            if (state.user && state.user.defaultCurrency) {
-                select.value = state.user.defaultCurrency;
+            if (defaultCode) accSelect.value = defaultCode;
+        }
+
+        // Transaction currency: single enforced currency (default)
+        ['txnCurrency', 'editTxnCurrency'].forEach(function (id) {
+            var select = document.getElementById(id);
+            if (!select) return;
+            select.innerHTML = '';
+            if (defaultCode) {
+                var option = document.createElement('option');
+                option.value = defaultCode;
+                option.textContent = defaultCode + ' (' + (defaultSymbol || defaultCode) + ') - ' + (defaultName || defaultCode);
+                select.appendChild(option);
+                select.value = defaultCode;
             }
+            select.disabled = true;
         });
     }
 
@@ -698,11 +715,10 @@
         var date = document.getElementById('txnDate').value;
         var category = document.getElementById('txnCategory').value;
         var amount = document.getElementById('txnAmount').value;
-        var currency = document.getElementById('txnCurrency').value;
         var type = document.getElementById('txnType').value;
 
         // Validation
-        if (!name || !date || !category || !amount || !currency) {
+        if (!name || !date || !category || !amount) {
             showAlertInPanel('addTxnAlert', 'Please fill in all fields', 'error');
             return;
         }
@@ -721,7 +737,6 @@
             date: date,
             category: category,
             amount: parseFloat(amount),
-            currency: currency,
             type: type
         };
 
@@ -930,7 +945,7 @@
         document.getElementById('editTxnName').value = t.name;
         document.getElementById('editTxnDate').value = t.date;
         document.getElementById('editTxnAmount').value = t.amount;
-        document.getElementById('editTxnCurrency').value = t.currency;
+        document.getElementById('editTxnCurrency').value = (state.user && state.user.defaultCurrency) ? state.user.defaultCurrency : t.currency;
         document.getElementById('editTxnType').value = t.type;
 
         var expBtn = document.getElementById('editExpenseBtn');
@@ -952,11 +967,10 @@
             date: document.getElementById('editTxnDate').value,
             category: document.getElementById('editTxnCategory').value,
             amount: parseFloat(document.getElementById('editTxnAmount').value),
-            currency: document.getElementById('editTxnCurrency').value,
             type: document.getElementById('editTxnType').value
         };
 
-        if (!data.name || !data.date || !data.category || !data.amount || !data.currency) {
+        if (!data.name || !data.date || !data.category || !data.amount) {
             showToast('Please fill in all fields', 'error');
             return;
         }

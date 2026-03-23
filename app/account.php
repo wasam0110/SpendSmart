@@ -51,6 +51,10 @@ function handlePostAccount() {
  */
 function handleGetAccount() {
     if (isGuestMode()) {
+        $guestCurrency = isset($_SESSION['guest_default_currency']) && !empty($_SESSION['guest_default_currency'])
+            ? strtoupper((string)$_SESSION['guest_default_currency'])
+            : 'EUR';
+
         jsonResponse([
             'success' => true,
             'user' => [
@@ -58,7 +62,7 @@ function handleGetAccount() {
                 'firstName' => 'Guest',
                 'lastName' => 'User',
                 'email' => 'guest@spendsmart.com',
-                'defaultCurrency' => 'EUR',
+                'defaultCurrency' => $guestCurrency,
                 'createdAt' => date('c')
             ],
             'currencies' => getCurrencies()
@@ -85,6 +89,19 @@ function handleGetAccount() {
  */
 function handleUpdateAccount() {
     if (isGuestMode()) {
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!$input) {
+            $input = $_POST;
+        }
+
+        if (isset($input['defaultCurrency']) && !empty($input['defaultCurrency'])) {
+            $newDefaultCurrency = strtoupper(trim((string)sanitize($input['defaultCurrency'])));
+            if (!currencyCodeExists($newDefaultCurrency)) {
+                jsonResponse(['success' => false, 'message' => 'Invalid currency'], 400);
+            }
+            $_SESSION['guest_default_currency'] = $newDefaultCurrency;
+        }
+
         jsonResponse(['success' => true, 'message' => 'Profile updated (Guest Mode - not saved)']);
     }
 
